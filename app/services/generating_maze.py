@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from app.models.maze_data import MazeDataWithSolution
+from models.maze_data_with_solution import MazeDataWithSolution
 
 
 class GeneratingMaze():

@@ -1,8 +1,8 @@
 from collections import deque
-from app.models.maze_data import MazeDataWithSolution
+from models.maze_data_with_solution import MazeDataWithSolution
 
 
-class BFS(IBasesSolutionMaze):
+class BFS():
     def __init__(self, maze_data=None):
         self.maze_data = maze_data
 
@@ -49,7 +49,7 @@ class BFS(IBasesSolutionMaze):
                     way.append(((new_i, new_j), path + [(new_i, new_j)]))
 
         self.maze_data.solution_coordinates = None
-        return self.maze_data.solution_coordinates
+        return self.maze_data
 
 # import matplotlib.pyplot as plt
 # def generate_maze(right_walls, lower_walls, path=None):

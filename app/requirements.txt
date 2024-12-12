@@ -1,3 +1,5 @@
-numpy
-imageio
-fastapi
+numpy==1.26.4
+imageio==2.36.1
+fastapi==0.115.4
+matplotlib==3.9.2
+apscheduler==3.11.0)
