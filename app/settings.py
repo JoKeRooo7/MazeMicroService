@@ -4,8 +4,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    HOST: str = "0.0.0.0"
-    PORT: int = 8888
+    HOST: str = Field("0.0.0.0", env="HOST")
+    PORT: int = Field(8888, env="PORT")
     GIF_DIRECTORY: str = "files"
     GIF_FILE_NAME: str = "maze.gif"
     MAZE_ROWS: int = 35
