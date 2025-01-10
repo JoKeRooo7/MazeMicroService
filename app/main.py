@@ -68,6 +68,7 @@ my_app = FastAPI(
     lifespan=lifespan
 )
 
+
 @my_app.get("/standart_maze")
 async def get_maze_gif():
     if not os.path.exists(config.GIF_FILE_PATH):

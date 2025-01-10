@@ -1,5 +1,6 @@
 from collections import deque
-from models.maze_data_with_solution import MazeDataWithSolution
+# from models.maze_data_with_solution import MazeDataWithSolution
+from ..models.maze_data_with_solution import MazeDataWithSolution
 
 
 class BFS():
