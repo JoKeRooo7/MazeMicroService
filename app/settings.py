@@ -4,8 +4,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    APP_HOST: str = Field("0.0.0.0", env="MAZE_APP_HOST")
-    APP_PORT: int = Field(8000, env="MAZE_APP_PORT")
+    APP_HOST: str = Field("0.0.0.0", env="HOST")
+    APP_PORT: int = Field(8888, env="PORT")
     GIF_DIRECTORY: str = Field("files", env="MAZE_GIF_DIRECTORY")
     GIF_FILE_NAME: str = Field("maze.gif", env="MAZE_GIF_FILE_NAME")
     MAZE_ROWS: int = Field(35, env="MAZE_STD_ROWS")

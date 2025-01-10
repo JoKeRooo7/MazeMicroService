@@ -87,3 +87,8 @@ async def get_maze_gif():
     return FileResponse(app_settings.gif_file_path)
 
 # uvicorn main:maze_app --host 1.2.3.4 --port 5678 --reload
+if __name__ == "__main__":
+    uvicorn.run(maze_app, 
+                host=app_settings.HOST, 
+                port=app_settings.PORT
+                )
