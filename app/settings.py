@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    APP_HOST: str = Field("0.0.0.0", env="MAZE_APP_HOST")
+    APP_PORT: int = Field(8000, env="MAZE_APP_PORT")
     GIF_DIRECTORY: str = Field("files", env="MAZE_GIF_DIRECTORY")
     GIF_FILE_NAME: str = Field("maze.gif", env="MAZE_GIF_FILE_NAME")
     MAZE_ROWS: int = Field(35, env="MAZE_STD_ROWS")
@@ -15,6 +17,7 @@ class Settings(BaseSettings):
     WAY_COLOR: str = Field("#28a745", env="MAZE_WAY_COLOR")
     POINT_SIZE: int = Field(25, env="MAZE_POINT_SIZE")
     WALL_THICKNESS: int = Field(3, env="MAZE_WALL_THICKNESS")
+    GIF_DELAY: float = Field(0.3, env="MAZE_WALL_THICKNESS")
 
 
     def __init__(self, **kwargs):

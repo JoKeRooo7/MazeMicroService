@@ -1,7 +1,6 @@
 import random
 import numpy as np
-# from models.maze_data_with_solution import MazeDataWithSolution
-from ..models.maze_data_with_solution import MazeDataWithSolution
+from models.maze_data_with_solution import MazeDataWithSolution
 
 
 class GeneratingMaze():
@@ -89,71 +88,3 @@ class GeneratingMaze():
             return True
         return False
 
-
-# import matplotlib.pyplot as plt
-# def generate_maze(right_walls, lower_walls):
-
-#     rows, cols = right_walls.shape
-#     fig, ax = plt.subplots()
-
-#     ax.plot([0, cols], [0, 0], color='black')  # Верхняя граница
-#     ax.plot([0, cols], [rows, rows], color='black')  # Нижняя граница
-#     ax.plot([0, 0], [0, rows], color='black')  # Левая граница
-#     ax.plot([cols, cols], [0, rows], color='black')  # Правая граница
-
-#     # Рисуем внутренние стены
-#     for i in range(rows):
-#         for j in range(cols):
-#             # Рисуем правую стену
-#             if right_walls[i, j] == 1:
-#                 ax.plot([j + 1, j + 1], [i, i + 1], color='black')
-#             # Рисуем нижнюю стену
-#             if lower_walls[i, j] == 1:
-#                 ax.plot([j, j + 1], [i + 1, i + 1], color='black')
-
-#     # Рисуем внешние границы лабиринта
-#     ax.plot([0, cols], [0, 0], color='black')  # Верхняя граница
-#     ax.plot([0, cols], [rows, rows], color='black')  # Нижняя граница
-#     ax.plot([0, 0], [0, rows], color='black')  # Левая граница
-#     ax.plot([cols, cols], [0, rows], color='black')  # Правая граница
-
-#     ax.set_aspect('equal')
-#     ax.invert_yaxis()  # Чтобы начало координат было в верхнем левом углу
-#     plt.xticks([])  # Убираем метки по оси X
-#     plt.yticks([])  # Убираем метки по оси Y
-#     plt.show()
-
-
-# if __name__ == "__main__":
-#     rows = 10
-#     cols = 10
-#     data = MazeDataWithSolution(rows=rows, cols=cols)
-
-#     labirint = GeneratingMaze(data)
-#     data = labirint.create_maze()
-#     print("=====------result------======")
-#     print(data.rows)
-#     print(data.cols)
-#     print(data.right_walls)
-#     print(data.lower_walls)
-#     # labirint.maze_data.right_walls = np.array(
-#     #     [[0, 1, 0, 0, 1, 0, 0, 1, 0, 1],
-#     #     [1, 1, 0, 0, 1, 0, 0, 0, 0, 1],
-#     #     [0, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-#     #     [1, 1, 1, 0, 1, 0, 0, 1, 0, 1],
-#     #     [0, 1, 0, 1, 0, 0, 1, 0, 1, 1],
-#     #     [1, 0, 0, 0, 1, 0, 0, 0, 1, 1],
-#     #     [0, 1, 0, 1, 1, 0, 1, 1, 0, 1],
-#     #     [1, 1, 0, 1, 0, 0, 0, 1, 1, 1]])
-#     # labirint.maze_data.lower_walls = np.array(
-#     #     [[0, 1, 1, 1, 0, 0, 1, 1, 1, 0],
-#     #     [0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
-#     #     [0, 1, 0, 0, 0, 0, 1, 1, 1, 0],
-#     #     [0, 0, 0, 1, 1, 0, 1, 0, 1, 0],
-#     #     [0, 1, 0, 1, 0, 1, 1, 1, 0, 0],
-#     #     [0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
-#     #     [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-#     #     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
-#     # print(labirint.maze_data.lower_walls)    
-#     # print(labirint.maze_data.lower_walls)    
-#     generate_maze(data.right_walls, data.lower_walls)

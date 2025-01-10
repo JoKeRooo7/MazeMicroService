@@ -1,49 +1,45 @@
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
-# from settings import app_settings
-# from models.maze_data_with_solution import MazeDataWithSolution
-from ..settings import app_settings
-from ..models.maze_data_with_solution import MazeDataWithSolution
+from settings import app_settings
+from models.maze_data_with_solution import MazeDataWithSolution
 
 
 class MazeGIF:
-    def __init__(self, maze_data: MazeDataWithSolution, delay: float = 0.1):
+    def __init__(self, maze_data: MazeDataWithSolution = None, delay: float = 0.3):
         """
             :param maze_data: Объект MazeDataWithSolution с данными лабиринта и путём.
             :param delay: Время задержки между кадрами в секундах.
         """
         self.maze_data = maze_data
         self.delay = delay
-        self.images = []  # Для хранения кадров GIF
+        self.images = []
         self.last_image = None
         self._shift = +0.5
 
+    @property
+    def maze_data(self) -> MazeDataWithSolution:
+        return self.__maze_data
+
+    @maze_data.setter
+    def maze_data(self, maze_data) -> None:
+        if maze_data is not None:
+            self.__maze_data = maze_data
+        
     def _x_limit(self):
         """
             Возращает пределы координат изображения по оси x
         """
-        # return 0, self.maze_data.cols
         return -0.1 * app_settings.WALL_THICKNESS, self.maze_data.cols + 0.1 * app_settings.WALL_THICKNESS
 
     def _y_limit(self):
         """
             Возращает пределы координат изображения по оси y
         """
-        # return 0, self.maze_data.rows
         return -0.1 * app_settings.WALL_THICKNESS, self.maze_data.rows + 0.1 * app_settings.WALL_THICKNESS
     
-    def _draw_base_maze(self):
-        """ 
-            Отрисовывает лабиринт без решения (только стены, старт и конец).
-        """
+    
+    async def _draw_wals(self):
         maze = self.maze_data
-        plt.figure(
-            figsize=(
-                app_settings.IMAGE_LENGHT,
-                app_settings.IMAGE_HEIGHT 
-            )
-        )
-
         for i in range(maze.rows):
             for j in range(maze.cols):
                 if maze.right_walls[i, j]:
@@ -58,20 +54,36 @@ class MazeGIF:
                         [i + 1, i + 1], 
                         color=app_settings.WALL_COLOR,
                         linewidth=app_settings.WALL_THICKNESS)
-                if j == 0:  # Если на первом столбце
+                if j == 0:
                     plt.plot(
                         [j, j], 
                         [i, i + 1], 
                         color=app_settings.WALL_COLOR, 
                         linewidth=app_settings.WALL_THICKNESS
                     )
-                if i == 0:  # Если на первом ряду
+                if i == 0:
                     plt.plot(
                         [j, j + 1], 
                         [i, i], 
                         color=app_settings.WALL_COLOR, 
                         linewidth=app_settings.WALL_THICKNESS
                     )
+
+    
+    async def _draw_base_maze(self):
+        """ 
+            Отрисовывает лабиринт без решения (только стены, старт и конец).
+        """
+        maze = self.maze_data
+        plt.figure(
+            figsize=(
+                app_settings.IMAGE_LENGHT,
+                app_settings.IMAGE_HEIGHT 
+            )
+        )
+
+        await self._draw_wals()
+    
         plt.scatter(
             maze.start_point[1] +  self._shift,
             maze.start_point[0] +  self._shift,
@@ -87,6 +99,7 @@ class MazeGIF:
             s=app_settings.POINT_SIZE, 
             marker="s",
             label="End")
+    
         min_x, max_x = self._x_limit()
         min_y, max_y = self._y_limit()
         plt.xlim(min_x ,max_x)
@@ -98,7 +111,7 @@ class MazeGIF:
         plt.savefig(self.last_image, bbox_inches='tight', pad_inches=0, transparent=True)
         plt.close()
 
-    def _draw_path_frame(self, path_segment):
+    async def _draw_path_frame(self, path_segment):
         """ 
             Добавляет текущий путь на базовый фон и сохраняет кадр. 
         """
@@ -136,36 +149,15 @@ class MazeGIF:
         plt.close()
         self.images.append(imageio.imread(self.last_image))
 
-    def create_gif(self):
+    async def create_gif(self, maze_data: MazeDataWithSolution = None):
         """
             Создаёт GIF с пошаговым прохождением пути.
         """
+        self.maze_data = maze_data
         self.images = []
-        self._draw_base_maze()
+        await self._draw_base_maze()
         path = self.maze_data.solution_coordinates
         for i in range(1, len(path)):
-            self._draw_path_frame([path[i-1], path[i]])
+            await self._draw_path_frame([path[i-1], path[i]])
 
         imageio.mimsave(app_settings.gif_file_path, self.images, duration=self.delay)
-        
-
-from ..services.generating_maze import GeneratingMaze
-from ..services.solution_maze import BFS
-import numpy as np
-
-
-if __name__ == "__main__":
-    maze_data = MazeDataWithSolution(
-        rows=app_settings.MAZE_ROWS,
-        cols=app_settings.MAZE_COLS)
-    generating_services = GeneratingMaze(maze_data=maze_data)
-    generating_services.create_maze()
-    maze_data.start_point = (np.random.randint(0, maze_data.rows), np.random.randint(0, maze_data.cols))
-    maze_data.end_point = (np.random.randint(0, maze_data.rows), np.random.randint(0, maze_data.cols))
-    # print(f"info (x,y) - start: { \
-    #     (maze_data.start_point[1] + 1, maze_data.start_point[0] + 1)} / \
-    #     end: {(maze_data.end_point[1] + 1, maze_data.end_point[0] + 1)}")
-    solution_services = BFS(maze_data)
-    solution_services.finding_way()
-    gif = MazeGIF(maze_data)
-    gif.create_gif()
