@@ -86,9 +86,4 @@ async def get_maze_gif():
         raise HTTPException(status_code=500, detail="File not found")
     return FileResponse(app_settings.gif_file_path)
 
-
-if __name__ == "__main__":
-    uvicorn.run(
-        maze_app, 
-        host=app_settings.APP_HOST, 
-        port=app_settings.APP_PORT)
+# uvicorn main:maze_app --host 1.2.3.4 --port 5678 --reload
