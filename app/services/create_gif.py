@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from settings import app_settings
 from models.maze_data_with_solution import MazeDataWithSolution
 from asyncio import Semaphore
-
+# from memory_profiler import profile
 
 class MazeGIF:
     def __init__(self, maze_data: MazeDataWithSolution = None, delay: float = 0.3, max_concurrent_tasks: int = 5):
@@ -24,13 +24,33 @@ class MazeGIF:
         for i in range(maze.rows):
             for j in range(maze.cols):
                 if maze.right_walls[i, j]:
-                    plt.plot([j + 1, j + 1], [i, i + 1], color=app_settings.WALL_COLOR, linewidth=app_settings.WALL_THICKNESS)
+                    plt.plot(
+                        [j + 1, j + 1], 
+                        [i, i + 1], 
+                        color=app_settings.WALL_COLOR, 
+                        linewidth=app_settings.WALL_THICKNESS
+                    )
                 if maze.lower_walls[i, j]:
-                    plt.plot([j, j + 1], [i + 1, i + 1], color=app_settings.WALL_COLOR, linewidth=app_settings.WALL_THICKNESS)
+                    plt.plot(
+                        [j, j + 1], 
+                        [i + 1, i + 1], 
+                        color=app_settings.WALL_COLOR, 
+                        linewidth=app_settings.WALL_THICKNESS
+                    )
                 if j == 0:
-                    plt.plot([j, j], [i, i + 1], color=app_settings.WALL_COLOR, linewidth=app_settings.WALL_THICKNESS)
+                    plt.plot(
+                        [j, j], 
+                        [i, i + 1], 
+                        color=app_settings.WALL_COLOR, 
+                        linewidth=app_settings.WALL_THICKNESS
+                    )
                 if i == 0:
-                    plt.plot([j, j + 1], [i, i], color=app_settings.WALL_COLOR, linewidth=app_settings.WALL_THICKNESS)
+                    plt.plot(
+                        [j, j + 1], 
+                        [i, i], 
+                        color=app_settings.WALL_COLOR, 
+                        linewidth=app_settings.WALL_THICKNESS
+                    )
 
     async def _draw_base_maze(self):
         """
@@ -88,13 +108,21 @@ class MazeGIF:
             y2, x2 = path[i]
 
             async with self._semaphore:  # Ожидаем освобождения ресурса
-                plt.figure(figsize=(app_settings.IMAGE_LENGHT, app_settings.IMAGE_HEIGHT))
-                plt.imshow(base_image, extent=[
-                    -0.1 * app_settings.WALL_THICKNESS,
-                    self.maze_data.cols + 0.1 * app_settings.WALL_THICKNESS,
-                    -0.1 * app_settings.WALL_THICKNESS,
-                    self.maze_data.rows + 0.1 * app_settings.WALL_THICKNESS
-                ])
+                plt.figure(
+                    figsize=(
+                        app_settings.IMAGE_LENGHT, 
+                        app_settings.IMAGE_HEIGHT
+                        )
+                    )
+                plt.imshow(
+                    base_image, 
+                    extent=[
+                        -0.1 * app_settings.WALL_THICKNESS,
+                        self.maze_data.cols + 0.1 * app_settings.WALL_THICKNESS,
+                        -0.1 * app_settings.WALL_THICKNESS,
+                        self.maze_data.rows + 0.1 * app_settings.WALL_THICKNESS
+                    ]
+                )
                 plt.plot(
                     [x2 + self._shift, x1 + self._shift],
                     [self.maze_data.rows - y2 - self._shift, self.maze_data.rows - y1 - self._shift],
@@ -114,9 +142,11 @@ class MazeGIF:
         plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0, transparent=True)
         buf.seek(0)
         plt.close()
+        plt.close('all')
+
         return buf
 
-
+    # @profile
     async def create_gif(self, maze_data: MazeDataWithSolution = None):
         """
         Создаёт GIF с пошаговым прохождением пути.

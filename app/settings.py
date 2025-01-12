@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     PORT: int = Field(8888, env="PORT")
     GIF_DIRECTORY: str = "files"
     GIF_FILE_NAME: str = "maze.gif"
-    MAZE_ROWS: int = 35
-    MAZE_COLS: int = 35
+    MAZE_ROWS: int = 25
+    MAZE_COLS: int = 25
     IMAGE_LENGHT: int = 8
     IMAGE_HEIGHT: int = 8
     WALL_COLOR: str = "#000000"

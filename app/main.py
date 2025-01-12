@@ -61,26 +61,26 @@ async def schedule_new_gif():
     # print("Scheduler state:", scheduler.running)
     # scheduler.print_jobs()
 
-import time
-import asyncio
-async def detect_blocking():
-    interval = 0.1
-    last_time = time.time()
+# import time
+# import asyncio
+# async def detect_blocking():
+#     interval = 0.1
+#     last_time = time.time()
     
-    while True:
-        await asyncio.sleep(interval)
-        now = time.time()
-        delay = now - last_time - interval
-        last_time = now
+#     while True:
+#         await asyncio.sleep(interval)
+#         now = time.time()
+#         delay = now - last_time - interval
+#         last_time = now
         
-        if delay > interval * 2:
-            print(f"⚠️ Обнаружена блокировка! Задержка: {delay:.3f} секунд")
+#         if delay > interval * 2:
+#             print(f"⚠️ Обнаружена блокировка! Задержка: {delay:.3f} секунд")
 
 
 
 async def startup_event():
     scheduler.start()
-    asyncio.create_task(detect_blocking())
+    # asyncio.create_task(detect_blocking())
     await schedule_new_gif()
 
 
@@ -103,9 +103,11 @@ async def get_maze_gif():
         raise HTTPException(status_code=500, detail="File not found")
     return FileResponse(app_settings.gif_file_path)
 
+
 # uvicorn main:maze_app --host 1.2.3.4 --port 5678 --reload
 if __name__ == "__main__":
-    uvicorn.run(maze_app, 
-                host=app_settings.HOST, 
-                port=app_settings.PORT
-                )
+    uvicorn.run(
+        maze_app, 
+        host=app_settings.HOST, 
+        port=app_settings.PORT
+        )
