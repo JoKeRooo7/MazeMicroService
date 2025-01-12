@@ -16,7 +16,7 @@ class BFS():
             self.__maze_data = maze_data
 
 
-    def finding_way(self, maze_data=None):
+    async def finding_way(self, maze_data=None):
         self.maze_data = maze_data
         start = self.maze_data.start_point
         end = self.maze_data.end_point

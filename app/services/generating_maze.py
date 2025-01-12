@@ -22,18 +22,18 @@ class GeneratingMaze():
                 (self.__maze_data.rows, self.__maze_data.cols), 
                  dtype=int)
 
-    def create_maze(self, maze_data:MazeDataWithSolution=None) -> MazeDataWithSolution:
+    async def create_maze(self, maze_data:MazeDataWithSolution=None) -> MazeDataWithSolution:
         self.maze_data = maze_data
 
-        array_with_sets = self.__creating_an_array_with_sets()
+        array_with_sets = await self.__creating_an_array_with_sets()
         rows, cols = array_with_sets.shape
 
         for i in range(rows):
-            self.__creating_right_walls(i=i, array_with_sets=array_with_sets, cols=cols)
-            self.__creating_lower_walls(i=i, array_with_sets=array_with_sets, cols=cols, rows=rows)
+            await self.__creating_right_walls(i=i, array_with_sets=array_with_sets, cols=cols)
+            await self.__creating_lower_walls(i=i, array_with_sets=array_with_sets, cols=cols, rows=rows)
         return self.maze_data
 
-    def __creating_right_walls(self, i, array_with_sets, cols) -> None:
+    async def __creating_right_walls(self, i, array_with_sets, cols) -> None:
         for j in range(cols):
             if j == cols - 1:
                 self.__maze_data.right_walls[i, j] = 1
@@ -45,14 +45,14 @@ class GeneratingMaze():
                     if array_with_sets[i, j] == array_with_sets[i, j + 1]:
                         self.__maze_data.right_walls[i, j] = 1
                     else:
-                        self.__replace_set(array_with_sets, i, j + 1, array_with_sets[i, j])
+                        await self.__replace_set(array_with_sets, i, j + 1, array_with_sets[i, j])
 
-    def __creating_lower_walls(self, i, array_with_sets, cols, rows) -> None:
+    async def __creating_lower_walls(self, i, array_with_sets, cols, rows) -> None:
         for j in range(cols):
             need_lower_wals = random.choice([True, False])
 
             if need_lower_wals and \
-                self.__cell_is_not_one_without_lower_border(array_with_sets, i, j):
+                await self.__cell_is_not_one_without_lower_border(array_with_sets, i, j):
                     self.__maze_data.lower_walls[i, j] = 1
             elif i != rows - 1:
                 array_with_sets[i + 1, j] = array_with_sets[i, j]
@@ -61,22 +61,22 @@ class GeneratingMaze():
                 if j != cols - 1:
                     if array_with_sets[i, j] != array_with_sets[i, j  + 1]:
                         self.__maze_data.right_walls[i, j] = 0
-                    self.__replace_set(array_with_sets, i, j + 1, array_with_sets[i, j])
+                    await self.__replace_set(array_with_sets, i, j + 1, array_with_sets[i, j])
 
-    def __creating_an_array_with_sets(self) -> np.ndarray:
+    async def __creating_an_array_with_sets(self) -> np.ndarray:
         need_rows = self.maze_data.rows
         need_cols = self.maze_data.cols
         flat_atray = np.arange(1, need_rows * need_cols  + 1)
         new_array = flat_atray.reshape(need_rows, need_cols)
         return new_array
 
-    def __replace_set(self, array_with_sets, i, j, value) -> None:
+    async def __replace_set(self, array_with_sets, i, j, value) -> None:
         j_indices = np.argwhere(array_with_sets[i, :]==array_with_sets[i, j])
         for idx_j in j_indices:
             array_with_sets[i , idx_j] = value
 
     
-    def __cell_is_not_one_without_lower_border(self, array_with_sets, i, j) -> bool:
+    async def __cell_is_not_one_without_lower_border(self, array_with_sets, i, j) -> bool:
         j_indices = np.argwhere(array_with_sets[i, :]==array_with_sets[i, j])
 
         count_cell = 0

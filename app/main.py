@@ -34,8 +34,8 @@ async def new_maze():
             np.random.randint(0, maze.rows), 
             np.random.randint(0, maze.cols)
         )
-    maze = generate_maze_service.create_maze(maze)
-    maze = solution_maze_service.finding_way(maze)
+    maze = await generate_maze_service.create_maze(maze)
+    maze = await solution_maze_service.finding_way(maze)
     maze.step = len(maze.solution_coordinates) 
     return maze
 
@@ -58,12 +58,29 @@ async def schedule_new_gif():
     total_time = await create_new_gif()
     run_time = datetime.now() + timedelta(seconds=total_time)
     scheduler.add_job(schedule_new_gif, 'date', run_date=run_time)
-    print("Scheduler state:", scheduler.running)
-    scheduler.print_jobs()
+    # print("Scheduler state:", scheduler.running)
+    # scheduler.print_jobs()
+
+import time
+import asyncio
+async def detect_blocking():
+    interval = 0.1
+    last_time = time.time()
+    
+    while True:
+        await asyncio.sleep(interval)
+        now = time.time()
+        delay = now - last_time - interval
+        last_time = now
+        
+        if delay > interval * 2:
+            print(f"⚠️ Обнаружена блокировка! Задержка: {delay:.3f} секунд")
+
 
 
 async def startup_event():
     scheduler.start()
+    asyncio.create_task(detect_blocking())
     await schedule_new_gif()
 
 
